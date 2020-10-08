@@ -1,49 +1,59 @@
-A **heavily** modified version of [beastlybeast's SignificantTrades](https://github.com/beastlybeast/SignificantTrades) with multi exchanges / pairing support & chart visualizer.<br/>
-I did that mostly for fun and training, but combining many exchanges data together is kind of interesting to see. 
-
 # SignificantTrades [![Build Status](https://travis-ci.org/Tucsky/SignificantTrades.svg?branch=master)](https://travis-ci.org/Tucsky/SignificantTrades)
-Live trades visualizer.<br>
-Currently supporting Bitstamp, Kraken, Huobi, Hitbtc, Okex, Bitmex, Binance, Bitfinex, Gdax ([see server/src/exchanges/](server/src/exchanges))
 
-![screenshot](https://i.imgur.com/j3iP8ds.gif)
+Live cryptocurrency trades visualizer.<br>
+Currently supporting BitMEX, Bitfinex, Binance & Binance Futures, Gdax, Bitstamp, Deribit, Huobi, Okex, Hitbtc, Poloniex, Bybit and FTX ([see src/exchanges/](src/exchanges) for detail)
 
-## How it works
-- The repo contains a server part to gather & format exchanges data and broadcast it to many clients through websocket (mostly) communication.
-- The client part is written in vue.js, show live trades in a list based on settings (short timeframe row stacking by amount) and allow to visualize session's buys/sells/price in a little chart (which tick from 10s to 1d depending on zoom, so mostly 10s). It also can control the server so it knows which pair to track.
+![screenshot](https://i.imgur.com/nHJxsdL.gif)
 
 ## What it do
-- Aggregate trades from exchanges on a specific pair (default BTCUSD)
-- Filter trades by amount (by stacking them up)
-- Show realtime BUY & SELL volume & average price on a chart
-- Load previous trade data on the chart
-- Range selection (`shift + clic` the chart)
 
-Check out [the demo](https://tucsky.github.io/SignificantTrades/)
+This tool shows **markets orders filling limit orders** LIVE on the crypto markets.
+
+- Show LIVE trades from exchanges on a specific pair (default BTCUSD)
+- Filter noise by aggregating trades with the same timestamp (timeout based aggregation)
+- Chart averaged price, buy & sell volume, price sma, volume ema ([lightweight-chart](https://github.com/tradingview/lightweight-charts) was used)
+- Play audio when trade show up based on volume
+- Scroll through historical data (when available)
+
+Checkout [CHANGELOG.md](CHANGELOG.md) for details about the recent updates.
+
+## How it works
+
+The app is written in Vue.js, use the javascript WebSocket interface to connect to the exchanges API and listen to the trades events.
+The raw trades are then dispatched to the chart component, while it aggregate trades for the list component.
+Periodically a summary of market activity (volume, counts and liquidations) is sent to the stats & counters components.
 
 ## How to install & run locally
+
 1. Clone the repo
 
 ```bash
 git clone https://github.com/Tucsky/SignificantTrades
 ```
 
-2. Install server dependencies & run it
+2. Install dependencies
 
 ```bash
-cd server
 npm install
-node index
 ```
 
-3. Install client dependencies then run
+3. Run dev mode
+
+Dev mode is
 
 ```bash
-cd client
-npm install
-npm run dev
+npm run serve
 ```
 
-4. Open a browser window at localhost:8080
+This will automatically open a browser window at localhost:8080
+
+Otherwise can build the application
+
+```bash
+npm run build
+```
+
+and access the dist/index.html directly in the browser later without having to run a command
 
 ...
 
@@ -51,28 +61,26 @@ npm run dev
 
 ## Configuration
 
-All settings are optional and can be changed in the [server configuration file](server/config.json.example) (rename config.json.example into config.json as the real config file is untracked on github).
+SignificantTrades is now using Vue Cli which allows you to configure the client using .env file.
+Create a _.env.local_ or _.env.development_ or _.env.production_ file inside <code>/</code> folder.
 
-```js
-{
-  // the port which the server will be at 
-  "port": 3000, // (note that you will NEED to update the target url in [client/src/services/socket.js](client/src/services/socket.js))
-  
-  // delay (in ms) between server broadcasts to avoid large
-  "delay": 200, // (the larger the better performance wise)
-  
-  // default pair it should use 
-  "pair": "BTCUSD" // (then you can change it in the client settings)
-}
-```
+| key                 | description                                                                          | example value                                                      |
+| ------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| PROXY_URL           | what proxy url to use when fetching data from exchange's REST APIs                   | http://localhost:8080/                                             |
+| API_URL             | define main historical endpoint                                                      | http://192.168.0.50:3000/{pair}/historical/{from}/{to}/{timeframe} |
+| API_SUPPORTED_PAIRS | define when app should be trying to fetch historical data depending on selected pair | BTCUSD, ETHUSD                                                     |
 
-*Wanna contribute ?*<br>
-- [x] Publish a demo on github ([its up!](https://tucsky.github.io/SignificantTrades/))
-- [ ] Improve client performances (always room for improvements)
-- [ ] Inter-exchanges volume averaged price (kind of work but [can definetly be improved](https://i.imgur.com/J5lBuWr.gif)
-- [ ] Alerts & push notifications
-- [ ] Support more exchanges
-- [ ] Multiple channels monitoring at once
+## Implement historical data
 
-*Like whats been done here ?* Donate BTC (segwit)<br>
-[3GLyZHY8gRS96sH4J9Vw6s1NuE4tWcZ3hX](bitcoin:3GLyZHY8gRS96sH4J9Vw6s1NuE4tWcZ3hX)
+You can use this project without historical data just by opening the app in your browser, as getting trades from exchanges is made directly in the browser using websocket api.
+
+However, in order to show historical data you will need to setup your own server that will collect and distribute data on demand.
+
+The current code for the server part is located in the [feature/server](https://github.com/Tucsky/SignificantTrades/tree/feature/server) branch.
+Let's say you have a server instance running on port 3000, start the client with an environment variable `API_URL=http://localhost:3000/{pair}/historical/{from}/{to}/{timeframe} npm run serve`.
+
+## Donate
+
+LN https://tippin.me/@Tucsky ⚡️
+BTC [3KjgsrxrQRannoEBSmUdCobuHZyTU3QFB6](bitcoin:3KjgsrxrQRannoEBSmUdCobuHZyTU3QFB6)
+XMR 48NJj3RJDo33zMLaudQDdM8G6MfPrQbpeZU2YnRN2Ep6hbKyYRrS2ZSdiAKpkUXBcjD2pKiPqXtQmSZjZM7fC6YT6CMmoX6
