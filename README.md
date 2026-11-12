@@ -1,3 +1,8 @@
+⚠️ The project moved to https://github.com/Tucsky/aggr !
+
+Demo app at http://tucsky.github.io/aggr 🚀
+
+
 # SignificantTrades [![Build Status](https://travis-ci.org/Tucsky/SignificantTrades.svg?branch=master)](https://travis-ci.org/Tucsky/SignificantTrades)
 
 Live cryptocurrency trades visualizer.<br>
@@ -81,6 +86,5 @@ Let's say you have a server instance running on port 3000, start the client with
 
 ## Donate
 
-LN https://tippin.me/@Tucsky ⚡️
-BTC [3KjgsrxrQRannoEBSmUdCobuHZyTU3QFB6](bitcoin:3KjgsrxrQRannoEBSmUdCobuHZyTU3QFB6)
+BTC [3PK1bBK8sG3zAjPBPD7g3PL14Ndux3zWEz](bitcoin:3PK1bBK8sG3zAjPBPD7g3PL14Ndux3zWEz)
 XMR 48NJj3RJDo33zMLaudQDdM8G6MfPrQbpeZU2YnRN2Ep6hbKyYRrS2ZSdiAKpkUXBcjD2pKiPqXtQmSZjZM7fC6YT6CMmoX6

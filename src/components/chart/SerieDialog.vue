@@ -42,7 +42,14 @@
             <editable class="form-control" :content="option.value" @output="validate(option, $event)"></editable>
           </template>
           <template v-if="option.type === 'color'">
-            <verte picker="square" menuPosition="left" model="rgb" :value="option.value" @input="validate(option, $event)"></verte>
+            <verte
+              picker="square"
+              menuPosition="left"
+              model="rgb"
+              :value="option.value"
+              @input="validate(option, $event)"
+              :colorHistory="colors"
+            ></verte>
           </template>
           <template v-if="option.type === 'boolean'">
             <label class="checkbox-control">
@@ -88,6 +95,7 @@
 import seriesData from '../../data/series'
 import store from '../../store'
 import { camelToSentence, snakeToSentence } from '../../utils/helpers'
+import { PALETTE } from '../../utils/colors'
 
 const labels = {
   scaleMargins: false,
@@ -106,6 +114,7 @@ export default {
     availableTypes: { line: 'Line', histogram: 'Histogram', candlestick: 'Candlestick', bar: 'Bar' }
   }),
   computed: {
+    colors: () => PALETTE,
     userPreferences: function() {
       const options = store.state.settings.series[this.id] || {}
 

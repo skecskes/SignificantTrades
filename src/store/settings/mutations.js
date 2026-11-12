@@ -192,7 +192,7 @@ export default {
   SET_DECIMAL_PRECISION(state, value) {
     state.decimalPrecision = value
   },
-  DELETE_THREDELETE_THRESHOLD(state, index) {
+  DELETE_THRESHOLD(state, index) {
     state.thresholds.splice(index, 1)
   },
   ENABLE_EXCHANGE(state, exchange) {
@@ -227,6 +227,9 @@ export default {
   },
   SET_AUDIO_VOLUME(state, value) {
     state.audioVolume = value
+  },
+  SET_AUDIO_PITCH(state, value) {
+    state.audioPitch = value
   },
   SET_TIMEFRAME(state, value) {
     state.timeframe = value
